@@ -49,7 +49,9 @@ install -m 644 -t %{buildroot}%{_unitdir} %{name}.service
 if [ $1 -eq 1 ]; then
     echo "Configuring user"
     id -u %{nvidia_docker_user} >/dev/null 2>&1 || \
+    useradd -r -M -d %{nvidia_docker_root} -g %{nvidia_docker_user} -s /usr/sbin/nologin -c "NVIDIA Docker plugin" %{nvidia_docker_user} || \
     useradd -r -M -d %{nvidia_docker_root} -s /usr/sbin/nologin -c "NVIDIA Docker plugin" %{nvidia_docker_user}
+    
 fi
 echo "Setting up permissions"
 chown %{nvidia_docker_user}: %{nvidia_docker_root}
@@ -73,6 +75,9 @@ fi
 %systemd_postun_with_restart %{name}
 
 %changelog
+* Tue Oct 04 2016 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0~rc.3-1
+- 
+
 * Fri Jun 17 2016 NVIDIA CORPORATION <digits@nvidia.com> 1.0.0~rc.3-1
 - Support for Docker 1.12
 - Add volume mount options support to the nvidia package
